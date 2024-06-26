@@ -113,6 +113,7 @@ async function getStatus() {
       console.error('Device is not connected.');
     }
   } catch (error) {
+    bluetoothDevice = null
     console.error('Error reading status:', error);
   }
 

@@ -106,7 +106,7 @@ function saveData() {
                     alert(`Please fill out ${element} to save`)
                     return
                 }
-                if (element != "scouterNum") {
+                if ((element != "scouterNum") || (element != "initials")) {
                     input.value = ""
                 }
                 break
