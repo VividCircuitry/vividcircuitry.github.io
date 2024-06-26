@@ -145,6 +145,8 @@ async function getMatches() {
       const characteristic = await service.getCharacteristic(0x2A92);
       const value = await characteristic.readValue();
 
+      console.log('Buffer length:', value.byteLength);
+
       matches = value.getUint8(0);
 
       localStorage["matches"] = matches
