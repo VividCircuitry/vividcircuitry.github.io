@@ -47,7 +47,7 @@ async function checkAndSend() {
     console.log(localStorage["jsonData"]);
     if (bluetoothDevice && bluetoothDevice.gatt.connected) {
       const statusValue = await getStatus();
-      if (statusValue == parseInt(document.getElementById("scouterNum").value)) {
+      if (statusValue == document.getElementById("scouterNum").value) {
         await cutAndSendData(localStorage["jsonData"] || "");
       }
     } else {
@@ -107,7 +107,7 @@ async function getStatus() {
       const characteristic = await service.getCharacteristic(0x2A37);
       const value = await characteristic.readValue();
       
-      statusValue = value.getUint8(0);
+      statusValue = decodeString(value);
       console.log(`Status is ${statusValue}`);
     } else {
       console.error('Device is not connected.');
@@ -117,6 +117,11 @@ async function getStatus() {
   }
 
   return statusValue;
+}
+
+function decodeString(array) {
+  const decoder = new TextDecoder();
+  return decoder.decode(array);
 }
 
 function encodeString(str) {
@@ -146,10 +151,7 @@ async function getMatches() {
       const characteristic = await service.getCharacteristic(0x2A92);
       const value = await characteristic.readValue();
 
-      console.log('Buffer length:', value.byteLength);
-      console.log('Buffer content:', new Uint8Array(value.buffer));
-
-      matches = value.getUint8(0);
+      matches = decodeString(value);
 
       localStorage["matches"] = matches
     } else {
