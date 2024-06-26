@@ -121,7 +121,7 @@ async function getStatus() {
 
 function decodeString(array) {
   const decoder = new TextDecoder();
-  return decoder.decode(new Uint8Array(array.buffer));
+  return decoder.decode(array.buffer);
 }
 
 function encodeString(str) {
