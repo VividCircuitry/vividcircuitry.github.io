@@ -107,7 +107,7 @@ async function getStatus() {
       const characteristic = await service.getCharacteristic(0x2A37);
       const value = await characteristic.readValue();
       
-      statusValue = decodeString(value);
+      statusValue = value.getUint8(0);
       console.log(`Status is ${statusValue}`);
     } else {
       console.error('Device is not connected.');
@@ -121,9 +121,7 @@ async function getStatus() {
 
 function decodeString(array) {
   const decoder = new TextDecoder();
-  console.log("Before Decode: ", array)
   const uint8Array = new Uint8Array(array.buffer);
-  console.log('Decoded Uint8Array:', uint8Array);
   return decoder.decode(uint8Array);
 }
 
