@@ -130,12 +130,13 @@ async function checkMatches() {
   check = true
   while (check) {
     await new Promise(r => setTimeout(r, 10000));
-    console.log("matches: " + localStorage["matches"])
-
+    
     if (bluetoothDevice) {
       await getMatches()
       check = false
     }
+
+    console.log("matches: " + localStorage["matches"])
   }
 }
 
@@ -144,8 +145,6 @@ async function getMatches() {
       const service = await bluetoothDevice.gatt.getPrimaryService(0x180D);
       const characteristic = await service.getCharacteristic(0x2A92);
       const value = await characteristic.readValue();
-
-      console.log('Buffer length:', value.byteLength);
 
       matches = value.getUint8(0);
 
