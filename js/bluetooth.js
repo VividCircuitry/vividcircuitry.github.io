@@ -130,6 +130,7 @@ async function checkMatches() {
   check = true
   while (check) {
     await new Promise(r => setTimeout(r, 10000));
+    console.log("matches: " + localStorage["matches"])
 
     if (bluetoothDevice) {
       await getMatches()
