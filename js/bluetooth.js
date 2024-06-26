@@ -7,6 +7,8 @@ checkAndSend();
 setInterval(alertBluetooth, 1000);
 let blinkAlert = 1;
 
+document.getElementById("clearMatchDetailsCache").addEventListener('click', () => checkMatches())
+
 function alertBluetooth() {
   let alertButton = document.getElementById('alertBluetooth');
   if (bluetoothDevice) {
@@ -120,4 +122,32 @@ async function getStatus() {
 function encodeString(str) {
   const encoder = new TextEncoder();
   return encoder.encode(str);
+}
+
+async function checkMatches() {
+  localStorage["matches"] = ""
+
+  check = true
+  while (check) {
+    await new Promise(r => setTimeout(r, 10000));
+
+    if (bluetoothDevice) {
+      await getMatches()
+      check = false
+    }
+  }
+}
+
+async function getMatches() {
+    if (bluetoothDevice) {
+      const service = await bluetoothDevice.gatt.getPrimaryService(0x180D);
+      const characteristic = await service.getCharacteristic(0x2A92);
+      const value = await characteristic.readValue();
+
+      matches = value.getUint8(0);
+
+      localStorage["matches"] = matches
+    } else {
+      console.error('Device is not connected.');
+    }
 }

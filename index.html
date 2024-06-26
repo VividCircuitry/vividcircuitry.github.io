@@ -14,8 +14,8 @@
       <div id="dev-options" class="section" style="display:none;">
         <div class="Child-Container">
           <label class="Label">Do Not Touch Unless Told So!</label>
-          <button class="Save-Button" id="clearMatchDetailsCache">Clear Match Details Cache</button>
-          <button class="Save-Button" id="clearScoutingCache" onclick="localStorage[jsonData] = ''">Clear Scouting Cache</button>
+          <button class="Save-Button" id="clearMatchDetailsCache">Clear/Get Match Details Cache</button>
+          <button class="Save-Button" onclick="localStorage['jsonData'] = ''">Clear Scouting Cache</button>
         </div>
         <div class="Child-Container">
           <button class="Save-Button" onclick="showSection('initial')">Back</button>
@@ -34,10 +34,21 @@
         <div class="Child-Container">
           <label class="Label">Scouter Number</label><input autocomplete='off' type="text" id="scouterNum"
             class="Input-Field">
+
           <label class="Label">Match Number</label><input autocomplete='off' type="text" id="matchNumber"
             class="Input-Field">
+
+          <!-- <datalist id="matchNumbersData">
+          </datalist> -->
+
+
           <label class="Label">Team Number</label><input autocomplete='off' type="text" id="teamNumber"
             class="Input-Field">
+
+          <!-- <datalist id="teamNumbersData">
+          </datalist> -->
+
+
           <label class="Label">Scouter Initials</label><input type="text" id="initials" class="Input-Field">
         </div>
         <div class="Child-Container">
