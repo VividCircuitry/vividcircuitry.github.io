@@ -1,17 +1,23 @@
 let bluetoothDevice = null;
 
-document.getElementById('blueConnect').addEventListener('click', () => blueConnect());
+document
+  .getElementById("blueConnect")
+  .addEventListener("click", () => blueConnect());
 
 checkAndSend();
 
 setInterval(alertBluetooth, 1000);
 let blinkAlert = 1;
 
-document.getElementById("clearMatchDetailsCache").addEventListener('click', () => checkMatches())
-document.getElementById("getMatchesData").addEventListener('click', () => getMatches())
+document
+  .getElementById("clearMatchDetailsCache")
+  .addEventListener("click", () => checkMatches());
+document
+  .getElementById("getMatchesData")
+  .addEventListener("click", () => getMatches());
 
 function alertBluetooth() {
-  let alertButton = document.getElementById('alertBluetooth');
+  let alertButton = document.getElementById("alertBluetooth");
   if (bluetoothDevice) {
     alertButton.innerText = "You are connected to the Bluetooth network.";
     alertButton.style.background = "#EE5622";
@@ -23,17 +29,18 @@ function alertBluetooth() {
 }
 
 function blueConnect() {
-  navigator.bluetooth.requestDevice({
-    filters: [{ services: [0x180D] }]
-  })
-  .then(device => {
-    bluetoothDevice = device;
-    device.addEventListener('gattserverdisconnected', onDisconnected);
-    return forceConnect();
-  })
-  .catch(error => {
-    console.error('Error requesting Bluetooth device: ', error);
-  });
+  navigator.bluetooth
+    .requestDevice({
+      filters: [{ services: [0x180d] }],
+    })
+    .then((device) => {
+      bluetoothDevice = device;
+      device.addEventListener("gattserverdisconnected", onDisconnected);
+      return forceConnect();
+    })
+    .catch((error) => {
+      console.error("Error requesting Bluetooth device: ", error);
+    });
 }
 
 function onDisconnected(event) {
@@ -42,17 +49,19 @@ function onDisconnected(event) {
 
 async function checkAndSend() {
   while (true) {
-    await new Promise(r => setTimeout(r, 10000));
+    await new Promise((r) => setTimeout(r, 10000));
 
     console.log("looping");
     console.log(localStorage["jsonData"]);
     if (bluetoothDevice && bluetoothDevice.gatt.connected) {
       const statusValue = await getStatus();
-      if (statusValue == parseInt(document.getElementById("scouterNum").value)) {
+      if (
+        statusValue == parseInt(document.getElementById("scouterNum").value)
+      ) {
         await cutAndSendData(localStorage["jsonData"] || "");
       }
     } else {
-      console.error('Device is not connected.');
+      console.error("Device is not connected.");
     }
   }
 }
@@ -73,30 +82,29 @@ async function cutAndSendData(stringData) {
 async function sendData(data) {
   if (bluetoothDevice.gatt.connected) {
     try {
-      const service = await bluetoothDevice.gatt.getPrimaryService(0x180D);
-      const characteristic = await service.getCharacteristic(0x2A39);
+      const service = await bluetoothDevice.gatt.getPrimaryService(0x180d);
+      const characteristic = await service.getCharacteristic(0x2a39);
       console.log(data);
       await characteristic.writeValue(data);
     } catch (error) {
-      console.error('Error writing data; trying again:', error);
-      await new Promise(r => setTimeout(r, 2000));
+      console.error("Error writing data; trying again:", error);
+      await new Promise((r) => setTimeout(r, 2000));
       await sendData(data);
     }
   } else {
-    console.error('Device is not connected.');
+    console.error("Device is not connected.");
   }
 }
 
 function forceConnect() {
-  bluetoothDevice.gatt.connect()
-    .catch(error => {
-      console.error('DOMException occurred: ', error);
-      if (error instanceof DOMException) {
-        forceConnect();
-      } else {
-        console.error(error);
-      }
-    });
+  bluetoothDevice.gatt.connect().catch((error) => {
+    console.error("DOMException occurred: ", error);
+    if (error instanceof DOMException) {
+      forceConnect();
+    } else {
+      console.error(error);
+    }
+  });
 }
 
 async function getStatus() {
@@ -104,18 +112,18 @@ async function getStatus() {
 
   try {
     if (bluetoothDevice.gatt.connected) {
-      const service = await bluetoothDevice.gatt.getPrimaryService(0x180D);
-      const characteristic = await service.getCharacteristic(0x2A37);
+      const service = await bluetoothDevice.gatt.getPrimaryService(0x180d);
+      const characteristic = await service.getCharacteristic(0x2a37);
       const value = await characteristic.readValue();
-      
+
       statusValue = value.getUint8(0);
       console.log(`Status is ${statusValue}`);
     } else {
-      console.error('Device is not connected.');
+      console.error("Device is not connected.");
     }
   } catch (error) {
-    bluetoothDevice = null
-    console.error('Error reading status:', error);
+    bluetoothDevice = null;
+    console.error("Error reading status:", error);
   }
 
   return statusValue;
@@ -135,30 +143,38 @@ function encodeString(str) {
 async function getMatches() {
   matches = [];
   if (bluetoothDevice) {
-      dataLoop = true
-      while (dataLoop) {
-        const matchesStatusService = await bluetoothDevice.gatt.getPrimaryService(0x180D);
-        const matchesStatusCharacteristic = await matchesStatusService.getCharacteristic(0x2A91);
-        await matchesStatusCharacteristic.writeValue(encodeString("1"));
+    dataLoop = true;
+    while (dataLoop) {
+      const matchesStatusService = await bluetoothDevice.gatt.getPrimaryService(
+        0x180d
+      );
+      const matchesStatusCharacteristic =
+        await matchesStatusService.getCharacteristic(0x2a91);
+      await matchesStatusCharacteristic.writeValue(encodeString("1"));
 
-        matchesStatus = matchesStatusCharacteristic.readValue().getUint8(0);
-        while (matchesStatus == 1) {
-          const matchesStatusService = await bluetoothDevice.gatt.getPrimaryService(0x180D);
-          const matchesStatusCharacteristic = await matchesStatusService.getCharacteristic(0x2A91);
-          matchesStatus = matchesStatusCharacteristic.readValue().getUint8(0);
-        }
+      matchesStatus = decodeString(matchesStatusCharacteristic.readValue());
+      while (matchesStatus == "1") {
+        const matchesStatusService =
+          await bluetoothDevice.gatt.getPrimaryService(0x180d);
+        const matchesStatusCharacteristic =
+          await matchesStatusService.getCharacteristic(0x2a91);
+        matchesStatus = decodeString(matchesStatusCharacteristic.readValue());
+      }
 
-        if (matchesStatus == 0) {
-          const matchesDataService = await bluetoothDevice.gatt.getPrimaryService(0x180D);
-          const matchesDataCharacteristic = await matchesDataService.getCharacteristic(0x2A92);
-          matches.push(decodeString(matchesDataCharacteristic.readValue()))
-        } else {
-          dataLoop = false
-        }
+      if (matchesStatus == "0") {
+        const matchesDataService = await bluetoothDevice.gatt.getPrimaryService(
+          0x180d
+        );
+        const matchesDataCharacteristic =
+          await matchesDataService.getCharacteristic(0x2a92);
+        matches.push(decodeString(matchesDataCharacteristic.readValue()));
+      } else {
+        dataLoop = false;
+      }
     }
-    console.log(matches)
-    localStorage["matches"] = matches
+    console.log(matches);
+    localStorage["matches"] = matches;
   } else {
-    console.error('Device is not connected.');
+    console.error("Device is not connected.");
   }
 }
