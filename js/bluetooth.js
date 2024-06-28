@@ -142,7 +142,8 @@ function encodeString(str) {
 
 async function getMatches() {
   matches = [];
-  if (bluetoothDevice) {
+  if (bluetoothDevice && bluetoothDevice.gatt.connected) {
+    console.log("Bluetooth device is connected.");
     dataLoop = true;
     while (dataLoop) {
       const matchesStatusService = await bluetoothDevice.gatt.getPrimaryService(
@@ -151,14 +152,18 @@ async function getMatches() {
       const matchesStatusCharacteristic =
         await matchesStatusService.getCharacteristic(0x2a91);
       await matchesStatusCharacteristic.writeValue(encodeString("1"));
+      console.log("Wrote '1' to matchesStatusCharacteristic");
 
-      matchesStatus = decodeString(matchesStatusCharacteristic.readValue());
+      let matchesStatus = decodeString(
+        await matchesStatusCharacteristic.readValue()
+      );
+      console.log(`Initial matchesStatus: ${matchesStatus}`);
+
       while (matchesStatus == "1") {
-        const matchesStatusService =
-          await bluetoothDevice.gatt.getPrimaryService(0x180d);
-        const matchesStatusCharacteristic =
-          await matchesStatusService.getCharacteristic(0x2a91);
-        matchesStatus = decodeString(matchesStatusCharacteristic.readValue());
+        matchesStatus = decodeString(
+          await matchesStatusCharacteristic.readValue()
+        );
+        console.log(`Updated matchesStatus: ${matchesStatus}`);
       }
 
       if (matchesStatus == "0") {
@@ -167,7 +172,8 @@ async function getMatches() {
         );
         const matchesDataCharacteristic =
           await matchesDataService.getCharacteristic(0x2a92);
-        matches.push(decodeString(matchesDataCharacteristic.readValue()));
+        matches.push(decodeString(await matchesDataCharacteristic.readValue()));
+        console.log("Match data retrieved.");
       } else {
         dataLoop = false;
       }
