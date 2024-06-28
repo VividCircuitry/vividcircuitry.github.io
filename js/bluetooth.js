@@ -170,7 +170,9 @@ async function getMatches() {
         );
         const matchesDataCharacteristic =
           await matchesDataService.getCharacteristic(0x2a92);
-        matches.push(await matchesDataCharacteristic.readValue());
+        matchesDataValue = await matchesDataCharacteristic.readValue()
+        matchesData = decodeString(matchesDataValue)
+        matches.push(matchesData);
         console.log("Match data retrieved.");
       } else {
         dataLoop = false;
