@@ -155,23 +155,23 @@ async function getMatches() {
       console.log("Wrote '1' to matchesStatusCharacteristic");
 
       let matchesStatus = 
-        await matchesStatusCharacteristic.readValue();
+        await matchesStatusCharacteristic.readValue()[0];
       console.log(`Initial matchesStatus: ${matchesStatus}`);
 
-      while (matchesStatus == "1") {
-        matchesStatus = decodeString(
-          await matchesStatusCharacteristic.readValue()
-        );
+      while (matchesStatus == 1) {
+        matchesStatus = 
+          await matchesStatusCharacteristic.readValue()[0]
+        ;
         console.log(`Updated matchesStatus: ${matchesStatus}`);
       }
 
-      if (matchesStatus == "0") {
+      if (matchesStatus == 0) {
         const matchesDataService = await bluetoothDevice.gatt.getPrimaryService(
           0x180d
         );
         const matchesDataCharacteristic =
           await matchesDataService.getCharacteristic(0x2a92);
-        matches.push(decodeString(await matchesDataCharacteristic.readValue()));
+        matches.push(await matchesDataCharacteristic.readValue()[0]);
         console.log("Match data retrieved.");
       } else {
         dataLoop = false;
