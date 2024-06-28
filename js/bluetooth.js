@@ -8,6 +8,7 @@ setInterval(alertBluetooth, 1000);
 let blinkAlert = 1;
 
 document.getElementById("clearMatchDetailsCache").addEventListener('click', () => checkMatches())
+document.getElementById("getMatchesData").addEventListener('click', () => getMatches())
 
 function alertBluetooth() {
   let alertButton = document.getElementById('alertBluetooth');
@@ -131,32 +132,33 @@ function encodeString(str) {
   return encoder.encode(str);
 }
 
-async function checkMatches() {
-  localStorage["matches"] = ""
-
-  check = true
-  while (check) {
-    await new Promise(r => setTimeout(r, 10000));
-    
-    if (bluetoothDevice) {
-      await getMatches()
-      check = false
-    }
-
-    console.log("matches: " + localStorage["matches"])
-  }
-}
-
 async function getMatches() {
-    if (bluetoothDevice) {
-      const service = await bluetoothDevice.gatt.getPrimaryService(0x180D);
-      const characteristic = await service.getCharacteristic(0x2A92);
-      const value = await characteristic.readValue();
+  matches = [];
+  if (bluetoothDevice) {
+      dataLoop = true
+      while (dataLoop) {
+        const matchesStatusService = await bluetoothDevice.gatt.getPrimaryService(0x180D);
+        const matchesStatusCharacteristic = await matchesStatusService.getCharacteristic(0x2A91);
+        await matchesStatusCharacteristic.writeValue(encodeString("1"));
 
-      matches = decodeString(value);
+        matchesStatus = matchesStatusCharacteristic.readValue().getUint8(0);
+        while (matchesStatus == 1) {
+          const matchesStatusService = await bluetoothDevice.gatt.getPrimaryService(0x180D);
+          const matchesStatusCharacteristic = await matchesStatusService.getCharacteristic(0x2A91);
+          matchesStatus = matchesStatusCharacteristic.readValue().getUint8(0);
+        }
 
-      localStorage["matches"] = matches
-    } else {
-      console.error('Device is not connected.');
+        if (matchesStatus == 0) {
+          const matchesDataService = await bluetoothDevice.gatt.getPrimaryService(0x180D);
+          const matchesDataCharacteristic = await matchesDataService.getCharacteristic(0x2A92);
+          matches.push(decodeString(matchesDataCharacteristic.readValue()))
+        } else {
+          dataLoop = false
+        }
     }
+    console.log(matches)
+    localStorage["matches"] = matches
+  } else {
+    console.error('Device is not connected.');
+  }
 }
