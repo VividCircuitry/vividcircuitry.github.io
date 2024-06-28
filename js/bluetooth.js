@@ -156,7 +156,6 @@ async function getMatches() {
       let matchesStatusValue = await matchesStatusCharacteristic.readValue();
       matchesStatus = matchesStatusValue.getUint8(0);
       console.log(`Initial matchesStatus: ${matchesStatus}`);
-      console.log(`Initial matchesStatusValue: ${matchesStatusValue}`);
 
       while (matchesStatus == 1) {
         matchesStatusValue = await matchesStatusCharacteristic.readValue();
