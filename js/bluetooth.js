@@ -156,6 +156,7 @@ async function getMatches() {
       let matchesStatusValue = await matchesStatusCharacteristic.readValue();
       matchesStatus = matchesStatusValue.getUint8(0);
       console.log(`Initial matchesStatus: ${matchesStatus}`);
+      console.log(`Initial matchesStatusValue: ${matchesStatusValue}`);
 
       while (matchesStatus == 1) {
         matchesStatusValue = await matchesStatusCharacteristic.readValue();
@@ -169,12 +170,7 @@ async function getMatches() {
         );
         const matchesDataCharacteristic =
           await matchesDataService.getCharacteristic(0x2a92);
-
-        matchesDataValue = await matchesDataCharacteristic.readValue();
-        matchesData = decodeString(matchesDataValue);
-        console.log(`matchesData: ${matchesData}`)
-
-        matches.push(matchesData);
+        matches.push(await matchesDataCharacteristic.readValue());
         console.log("Match data retrieved.");
       } else {
         dataLoop = false;
