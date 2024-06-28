@@ -171,7 +171,8 @@ async function getMatches() {
         const matchesDataCharacteristic =
           await matchesDataService.getCharacteristic(0x2a92);
         matchesDataValue = await matchesDataCharacteristic.readValue()
-        matchesData = decodeString(matchesDataValue)
+        matchesData = decodeString(matchesDataValue.buffer)
+        console.log(`matchesData: ${matchesData}`)
         matches.push(matchesData);
         console.log("Match data retrieved.");
       } else {
