@@ -140,7 +140,7 @@ function encodeString(str) {
 }
 
 async function getMatches() {
-  matches = [];
+  matches = "";
   if (bluetoothDevice && bluetoothDevice.gatt.connected) {
     console.log("Bluetooth device is connected.");
     dataLoop = true;
@@ -172,7 +172,7 @@ async function getMatches() {
         matchesDataValue = await matchesDataCharacteristic.readValue()
         matchesData = decodeString(matchesDataValue.buffer)
         console.log(`matchesData: ${matchesData}`)
-        matches.push(matchesData);
+        matches = matches + matchesData
         console.log("Match data retrieved.");
       } else {
         dataLoop = false;
