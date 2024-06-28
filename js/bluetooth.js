@@ -153,9 +153,11 @@ async function getMatches() {
       await matchesStatusCharacteristic.writeValue(encodeString("1"));
       console.log("Wrote '1' to matchesStatusCharacteristic");
 
-      let matchesStatus = 
-        await matchesStatusCharacteristic.readValue().getUint8(0);
+      let matchesStatusValue = 
+        await matchesStatusCharacteristic.readValue();
+      matchesStatus = matchesStatusValue.getUint8(0)
       console.log(`Initial matchesStatus: ${matchesStatus}`);
+      console.log(`Initial matchesStatusValue: ${matchesStatusValue}`);
 
       while (matchesStatus == 1) {
         matchesStatus = 
