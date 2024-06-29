@@ -3,6 +3,7 @@ let bluetoothDevice = null;
 document.getElementById("blueConnect").addEventListener("click", () => blueConnect());
 
 checkAndSend();
+getMatchRecommendations();
 
 setInterval(alertBluetooth, 1000);
 let blinkAlert = 1;
@@ -172,5 +173,15 @@ async function getMatches() {
         localStorage["matches"] = matches;
     } else {
         console.error("Device is not connected.");
+    }
+}
+
+function getMatchRecommendations() {
+    jsonParsed = JSON.parse(localStorage["matches"]).matches;
+
+    for (let matchNumber = 0; matchNumber < jsonParsed.length; matchNumber++) {
+        datalist = document.getElementById("matchNumbersData");
+        newOption = document.createElement("option");
+        datalist.appendChild(newOption);
     }
 }
