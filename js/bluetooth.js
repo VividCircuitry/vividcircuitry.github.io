@@ -177,8 +177,8 @@ async function getMatches() {
 }
 
 async function getMatchRecommendations() {
-    console.log(localStorage["matches"]);
     await new Promise((r) => setTimeout(r, 2000));
+    console.log(localStorage["matches"]);
 
     jsonParsed = JSON.parse(localStorage["matches"]);
     console.log(jsonParsed);
