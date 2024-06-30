@@ -176,21 +176,25 @@ async function getMatches() {
     }
 }
 
-function getMatchRecommendations() {
-    jsonParsed = JSON.parse(localStorage["matches"]).matches;
+async function getMatchRecommendations() {
+    console.log(localStorage["matches"]);
+    await new Promise((r) => setTimeout(r, 2000));
+
+    jsonParsed = JSON.parse(localStorage["matches"]);
 
     const file = new Blob([jsonParsed], { type: "text/plain" });
 
     const link = document.createElement("a");
     link.href = URL.createObjectURL(file);
-    link.download = `M${formData.matchNumber}_T${formData.teamNumber}.json`;
+    link.download = `test.json`;
 
     link.click();
     URL.revokeObjectURL(link.href);
 
-    for (let matchNumber = 0; matchNumber < jsonParsed.length; matchNumber++) {
+    for (let matchNumber = 0; matchNumber < jsonParsed.matches.length; matchNumber++) {
         datalist = document.getElementById("matchNumbersData");
         newOption = document.createElement(matchNumber.toString());
         datalist.appendChild(newOption);
+        console.log(matchNumber);
     }
 }
