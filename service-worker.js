@@ -31,3 +31,13 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
     e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });
+
+self.addEventListener("message", (event) => {
+    if (event.data === "skipWaiting") {
+        self.skipWaiting();
+    }
+});
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(clients.claim());
+});

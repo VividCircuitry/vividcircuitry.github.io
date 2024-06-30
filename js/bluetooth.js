@@ -183,18 +183,13 @@ async function getMatchRecommendations() {
     jsonParsed = JSON.parse(localStorage["matches"]);
     console.log(jsonParsed);
 
-    const file = new Blob([jsonParsed], { type: "text/plain" });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(file);
-    link.download = `test.json`;
-
-    link.click();
-    URL.revokeObjectURL(link.href);
-
     for (let matchNumber = 0; matchNumber < jsonParsed.matches.length; matchNumber++) {
         datalist = document.getElementById("matchNumbersData");
-        newOption = document.createElement(matchNumber.toString());
+        console.log(matchNumber.toString());
+
+        newOption = document.createElement("option");
+        newOption.value = matchNumber.toString();
+
         datalist.appendChild(newOption);
         console.log(matchNumber);
     }
