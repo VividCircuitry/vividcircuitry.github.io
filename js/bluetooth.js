@@ -183,7 +183,7 @@ async function getMatchRecommendations() {
     jsonParsed = JSON.parse(localStorage["matches"]);
     console.log(jsonParsed);
 
-    for (let matchNumber = 0; matchNumber < jsonParsed.matches.length; matchNumber++) {
+    for (let matchNumber = 0; matchNumber < jsonParsed[0].matches.length; matchNumber++) {
         datalist = document.getElementById("matchNumbersData");
         console.log(matchNumber.toString());
 
