@@ -181,6 +181,7 @@ async function getMatchRecommendations() {
     await new Promise((r) => setTimeout(r, 2000));
 
     jsonParsed = JSON.parse(localStorage["matches"]);
+    console.log(jsonParsed);
 
     const file = new Blob([jsonParsed], { type: "text/plain" });
 
