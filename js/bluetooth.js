@@ -180,8 +180,7 @@ async function getMatchRecommendations() {
     await new Promise((r) => setTimeout(r, 5000));
     console.log(localStorage["matches"]);
 
-    jsonStringed = JSON.stringify(localStorage["matches"]);
-    jsonParsed = JSON.parse(jsonStringed);
+    jsonParsed = JSON.parse(localStorage["matches"].trim());
     console.log(jsonParsed);
 
     for (let matchNumber = 0; matchNumber < jsonParsed.matches.length; matchNumber++) {
@@ -194,15 +193,4 @@ async function getMatchRecommendations() {
         datalist.appendChild(newOption);
         console.log(matchNumber);
     }
-}
-
-function findDiff(str1, str2) {
-    let diff = "";
-    str2.split("").forEach(function (val, i) {
-        if (val != str1.charAt(i)) diff += val;
-    });
-    if (diff == "") {
-        return "no diff";
-    }
-    return diff;
 }
