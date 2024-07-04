@@ -206,5 +206,8 @@ function findDiff(str1, str2) {
     str2.split("").forEach(function (val, i) {
         if (val != str1.charAt(i)) diff += val;
     });
+    if (diff == "") {
+        return "no diff";
+    }
     return diff;
 }
