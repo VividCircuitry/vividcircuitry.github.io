@@ -173,8 +173,6 @@ async function getMatches() {
         localStorage["matches"] = matches;
     } else {
         console.error("Device is not connected.");
-        localStorage["matches"] =
-            '[{"matches":[{"matchNum":0,"redAlliance":["frc9998","frc369","frc694"],"blueAlliance":["frc1923","frc2265","frc2539"]},{"matchNum":1,"redAlliance":["frc9998","frc369","frc694"],"blueAlliance":["frc1923","frc2265","frc2539"]},{"matchNum":2,"redAlliance":["frc2265","frc7045","frc2607"],"blueAlliance":["frc1640","frc7414","frc316"]}]}]';
     }
 }
 
@@ -182,7 +180,8 @@ async function getMatchRecommendations() {
     await new Promise((r) => setTimeout(r, 5000));
     console.log(localStorage["matches"]);
 
-    jsonParsed = JSON.parse(localStorage["matches"]);
+    jsonStringed = JSON.stringify(localStorage["matches"]);
+    jsonParsed = JSON.parse(jsonStringed);
     console.log(jsonParsed);
 
     for (let matchNumber = 0; matchNumber < jsonParsed[0].matches.length; matchNumber++) {
