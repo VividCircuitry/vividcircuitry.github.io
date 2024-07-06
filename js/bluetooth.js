@@ -198,6 +198,7 @@ async function setMatchRecommendations() {
 
 async function setTeamRecommendations() {
     matchNumStr = document.getElementById("matchNumber");
+    console.log(matchNumStr);
 
     if (matchNumStr != "") {
         matchNum = parseInt(matchNumStr);
@@ -213,7 +214,7 @@ async function setTeamRecommendations() {
                 teamMatchNum++
             ) {
                 const teamNumber = matchDetails.redAlliance[teamMatchNum];
-                datalist = document.getElementById("matchNumbersData");
+                datalist = document.getElementById("teamNumbersData");
 
                 newOption = document.createElement("option");
                 newOption.value = teamNumber;
