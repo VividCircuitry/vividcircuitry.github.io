@@ -1,4 +1,4 @@
-const CACHE_NAME = "v2.2";
+const CACHE_NAME = "v2.3";
 const CACHE_ASSETS = ["/index.html", "/misc/main.css", "/js/script.js", "/js/bluetooth.js"];
 
 self.addEventListener("install", (e) => {
