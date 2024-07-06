@@ -184,8 +184,13 @@ async function setMatchRecommendations() {
     jsonParsed = JSON.parse(localStorage["matches"]);
     console.log(jsonParsed);
 
+    datalist = document.getElementById("matchNumbersData");
+
+    while (datalist.firstChild) {
+        datalist.removeChild(datalist.firstChild);
+    }
+
     for (let matchNumber = 0; matchNumber < jsonParsed.matches.length; matchNumber++) {
-        datalist = document.getElementById("matchNumbersData");
         console.log(matchNumber.toString());
 
         newOption = document.createElement("option");
@@ -197,10 +202,9 @@ async function setMatchRecommendations() {
 }
 
 function setTeamRecommendations() {
-    function addTeams(allianceJSON) {
+    function addTeams(allianceJSON, datalist) {
         for (let teamMatchNum = 0; teamMatchNum < allianceJSON.length; teamMatchNum++) {
             const teamNumber = allianceJSON[teamMatchNum];
-            datalist = document.getElementById("teamNumbersData");
 
             newOption = document.createElement("option");
             newOption.value = teamNumber;
@@ -217,9 +221,14 @@ function setTeamRecommendations() {
         jsonParsed = JSON.parse(localStorage["matches"]);
         if (matchNum <= jsonParsed.matches.length) {
             matchDetails = jsonParsed.matches[matchNum];
+            datalist = document.getElementById("teamNumbersData");
 
-            addTeams(matchDetails.redAlliance);
-            addTeams(matchDetails.blueAlliance);
+            while (datalist.firstChild) {
+                datalist.removeChild(datalist.firstChild);
+            }
+
+            addTeams(matchDetails.redAlliance, datalist);
+            addTeams(matchDetails.blueAlliance, datalist);
         }
     }
 }
