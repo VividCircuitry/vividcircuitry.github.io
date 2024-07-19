@@ -1,10 +1,10 @@
 const addResourcesToCache = async (resources) => {
-    const cache = await caches.open("v1");
+    const cache = await caches.open("v2");
     await cache.addAll(resources);
 };
 
 const putInCache = async (request, response) => {
-    const cache = await caches.open("v1");
+    const cache = await caches.open("v2");
     await cache.put(request, response);
 };
 
@@ -66,12 +66,12 @@ self.addEventListener("install", (event) => {
     event.waitUntil(addResourcesToCache(["./", "./index.html", "./script.js"]));
 });
 
-//   self.addEventListener('fetch', (event) => {
-//     event.respondWith(
-//       cacheFirst({
-//         request: event.request,
-//         preloadResponsePromise: event.preloadResponse,
-//         fallbackUrl: './gallery/myLittleVader.jpg',
-//       })
-//     );
-//   });
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        cacheFirst({
+            request: event.request,
+            preloadResponsePromise: event.preloadResponse,
+            fallbackUrl: "./index.html",
+        })
+    );
+});
