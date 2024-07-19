@@ -1,22 +1,13 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Offline Website</title>
-  <link rel="stylesheet" href="/styles/main.css">
-</head>
-<body>
-  <h1>Hello, World!</h1>
-  <script src="/script/main.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js');
-      });
-    }
-  </script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Offline Website</title>
+        <link rel="stylesheet" href="main.css" />
+    </head>
+    <body>
+        <h1>Hello, World!</h1>
+        <script src="script.js"></script>
+    </body>
 </html>
